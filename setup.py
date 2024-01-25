@@ -1,6 +1,9 @@
 import os.path
 
+from glob import glob
 from setuptools import setup, find_packages
+
+from pybind11.setup_helpers import Pybind11Extension
 
 name = "PyUW12"
 description = "A Python package for UW12 calculations"
@@ -21,6 +24,13 @@ with open('LICENSE') as f:
 
 setup_location = os.path.abspath(os.path.dirname(__file__))
 
+ext_modules = [
+    Pybind11Extension(
+        "uw12_interface",
+        sorted(glob("external/*.cpp"))
+    ),
+]
+
 setup(
     name=name,
     version=version,
@@ -29,6 +39,7 @@ setup(
     author=author,
     author_email=author_email,
     url=url,
-    packages=find_packages(exclude=('tests', 'docs')),
+    ext_modules=ext_modules,
+    packages=find_packages(exclude=('tests', 'external', 'docs')),
     install_requires=requirements
 )

@@ -1,1 +1,3 @@
-PyUW12
+# PyUW12
+
+A python implementation of UW12 built using PySCF
