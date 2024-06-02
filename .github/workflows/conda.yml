@@ -36,6 +36,9 @@ jobs:
       - name: Prepare
         run: conda install conda-build conda-verify pytest
 
+      - name: Solver
+        run: conda --set solver classic
+
       - name: Build
         run: conda build conda.recipe
 
