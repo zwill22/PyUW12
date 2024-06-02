@@ -23,6 +23,7 @@ else()
   set(uw12_interface_MASTER_PROJECT OFF)
 endif()
 
-find_package(pybind11 REQUIRED)
+set(PYBIND11_NEWPYTHON ON)
+find_package(pybind11 CONFIG REQUIRED)
 
-pybind11_add_module(uw12_interface uw12_interface.cpp)
+pybind11_add_module(uw12_interface main.cpp)

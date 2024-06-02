@@ -1,4 +1,3 @@
-setuptools
-pyscf>=2.3.0
-pygame
+scikit-build-core
 pybind11
+pytest
