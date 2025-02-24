@@ -15,3 +15,5 @@ docs/_html/
 docs/_build/
 docs/_doxygen/
 docs/api/
+CMakePresets.json
+.vscode/

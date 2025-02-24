@@ -16,7 +16,14 @@ jobs:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
-    - uses: actions/checkout@v4
+    - name: checkout
+      uses: actions/checkout@v4
+
+    - name: setup environment
+      shell: bash
+      run: |
+        sudo apt update
+        sudo apt install -y libtbb-dev libarmadillo-dev libopenblas-dev
 
     - name: Setup UV
       uses: astral-sh/setup-uv@v5
@@ -27,25 +34,18 @@ jobs:
     
     - name: Set up Python
       run: uv python install
-
-    - name: Summary
-      id: strings
-      shell: bash
-      run: |
-        echo "Operating system=${{matrix.os}}"
-        echo "Python Version=${{matrix.python-version}}"
+  
+    - name: Build PyUW12
+      shell: bash -el {0}
+      run: uv build
 
     - name: Install PyUW12
-      shell: bash
+      shell: bash -el {0}
       run: uv sync --all-extras --dev
 
-    - name: Install test dependencies
-      shell: bash
-      run: uv sync --extra dev
-
     - name: Run tests
-      shell: bash
+      shell: bash -el {0}
       run: uv run pytest
 
     - name: Lint with ruff
-      run: uv run tool ruff check
+      run: uv tool run ruff check
