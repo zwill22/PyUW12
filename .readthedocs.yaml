@@ -1,0 +1,18 @@
+version: 2
+
+build:
+  os: ubuntu-lts-latest
+  tools:
+    python: latest
+  jobs:
+    pre-install:
+      - pip install pip-tools
+      - pip-compile --extra doc --output-file=docs/requirements.txt pyproject.toml 
+
+sphinx:
+  configuration: docs/conf.py
+  fail_on_warning: true
+
+python:
+  install:
+    - requirements: docs/requirements.txt
