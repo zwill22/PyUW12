@@ -24,6 +24,9 @@ jobs:
         github-token: ${{secrets.GITHUB_TOKEN}}
         python-version: ${{matrix.python-version}}
         pyproject-file: "pyproject.toml"
+    
+    - name: Set up Python
+      run: uv python install
 
     - name: Summary
       id: strings
@@ -32,9 +35,9 @@ jobs:
         echo "Operating system=${{matrix.os}}"
         echo "Python Version=${{matrix.python-version}}"
 
-    - name: Build PyUW12
+    - name: Install PyUW12
       shell: bash
-      run: uv build
+      run: uv sync --all-extras --dev
 
     - name: Install test dependencies
       shell: bash

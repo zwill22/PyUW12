@@ -8,13 +8,23 @@ namespace py = pybind11;
 
 namespace uw12 {
 
-    int uw12_energy(int i, int j) {
+/// @brief Example function
+///
+/// @param i An integer
+/// @param j Another integer
+///
+/// @return The sum of i and j
+int uw12_energy(int i, int j) {
 
-        return i + j;
-    }
+    return i + j;
+}
 
 }
 
+/// @brief Pybind Module interface
+///
+/// @param Interface name
+/// @param Interface label
 PYBIND11_MODULE(uw12_interface, m) {
     m.doc() = "Pybind plugin";
 

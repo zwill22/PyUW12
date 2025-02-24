@@ -5,10 +5,13 @@ dist/
 *CMakeFiles
 *cmake_install.cmake
 *CMakeCache.txt
-*Makefile
 *.so
 uv.lock
 .venv/
 .pytest_cache/
 __pycache__/
 .ruff_cache/
+docs/_html/
+docs/_build/
+docs/_doxygen/
+docs/api/

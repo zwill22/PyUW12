@@ -37,6 +37,14 @@ dev = [
     "coverage",
     "ruff"
 ]
+doc = [
+    "sphinx", 
+    "sphinx-rtd-theme", 
+    "myst-parser", 
+    "sphinx-autoapi",
+    "breathe",
+    "exhale"
+]
 
 [tool.scikit-build]
 wheel.expand-macos-universal-tags = true
