@@ -1,4 +1,5 @@
 .idea/
+build/
 cmake-build-*
 dist/
 *CMakeFiles
@@ -6,3 +7,8 @@ dist/
 *CMakeCache.txt
 *Makefile
 *.so
+uv.lock
+.venv/
+.pytest_cache/
+__pycache__/
+.ruff_cache/

@@ -2,7 +2,7 @@
 Unit test to test pytest functions
 """
 
-import package_pyuw12
+from pyuw12_backend import uw12_interface
 
 
 def function():
@@ -14,4 +14,4 @@ def test_function():
 
 
 def test_uw12_energy():
-    assert package_pyuw12.uw12_energy(1, 2) == 3
+    assert uw12_interface.uw12_energy(1, 2) == 3

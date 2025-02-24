@@ -3,4 +3,4 @@ find_package(pybind11 CONFIG REQUIRED)
 
 pybind11_add_module(uw12_interface main.cpp)
 
-install(TARGETS uw12_interface DESTINATION package_pyuw12)
+install(TARGETS uw12_interface DESTINATION pyuw12_backend)

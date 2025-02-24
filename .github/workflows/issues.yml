@@ -1,0 +1,22 @@
+name: "Generate issues from TODOs"
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write
+        issues: write
+        pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: "Generate issues"
+        uses: alstr/todo-to-issue-action@v5
+        with:
+          INSERT_ISSUE_URLS: "true"
+          CLOSE_ISSUES: "true"

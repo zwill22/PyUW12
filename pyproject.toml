@@ -2,29 +2,41 @@
 requires = ["scikit-build-core>=0.3.3", "pybind11"]
 build-backend = "scikit_build_core.build"
 
-
 [project]
-name = "package_pyuw12"
-version = "0.0.1"
-description="Python bindings for the UW12 library"
+name = "PyUW12"
+description = "Python bindings for the UW12 library"
+requires-python = ">= 3.9"
+authors = [ { name = "Z M Williams", email = "z.m.will@icloud.com" }]
+version = "0.1.0"
 readme = "README.md"
-license = {file = "LICENSE"}
-authors = [
-    { name = "Z. M. Williams", email = "z.m.williams4@gmail.com" },
+license = { file = "LICENSE" }
+dependencies = [
+    "scikit-build-core",
+    "pybind11"
 ]
-requires-python = ">=3.7"
+metadata_version = "2.4"
+keywords = ["Electronic Structure Theory", "Density Functional Theory", "Computational Chemistry",
+            "Electron correlation", "Correlation", "Density-fitting"]
 classifiers = [
     "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Intended Audience :: Science/Research"
 ]
 
 [project.optional-dependencies]
-test = ["pytest"]
-
+test = [ "pytest" ]
+dev = [
+    "pytest",
+    "coverage",
+    "ruff"
+]
 
 [tool.scikit-build]
 wheel.expand-macos-universal-tags = true
@@ -32,16 +44,41 @@ wheel.expand-macos-universal-tags = true
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
-xfail_strict = true
-log_cli_level = "INFO"
-filterwarnings = [
-    "error",
+addopts = "-ra -q -v"
+testpaths = [
+    "tests"
 ]
-testpaths = ["tests"]
+pythonpath = "pyuw12"
+markers = [
+    "slow"
+]
 
+[tool.ruff]
+line-length = 88
+indent-width = 4
+target-version = "py39"
 
-[tool.cibuildwheel]
-test-command = "pytest {project}/tests"
-test-extras = ["test"]
-build-verbosity = 1
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+fixable = ["ALL"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = false
+docstring-code-line-length = "dynamic"
+
+[tool.coverage.run]
+branch = true
+command_line = "-m pytest"
+omit = ["tests/*", "docs/*", "src/*"]
+
+[tool.coverage.report]
+ignore_errors = true
+fail_under = 80
+skip_empty = true
+
+[tool.uv]
+required-version = ">=0.5.0"

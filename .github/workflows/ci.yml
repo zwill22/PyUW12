@@ -1,0 +1,48 @@
+name: PyUW12Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup UV
+      uses: astral-sh/setup-uv@v5
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        python-version: ${{matrix.python-version}}
+        pyproject-file: "pyproject.toml"
+
+    - name: Summary
+      id: strings
+      shell: bash
+      run: |
+        echo "Operating system=${{matrix.os}}"
+        echo "Python Version=${{matrix.python-version}}"
+
+    - name: Build PyUW12
+      shell: bash
+      run: uv build
+
+    - name: Install test dependencies
+      shell: bash
+      run: uv sync --extra dev
+
+    - name: Run tests
+      shell: bash
+      run: uv run pytest
+
+    - name: Lint with ruff
+      run: uv run tool ruff check
