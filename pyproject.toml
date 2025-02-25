@@ -10,7 +10,7 @@ authors = [{ name = "Z M Williams", email = "z.m.will@icloud.com" }]
 version = "0.1.0"
 readme = "README.md"
 license = { file = "LICENSE" }
-dependencies = ["scikit-build-core", "pybind11"]
+dependencies = ["scikit-build-core", "pybind11", "pyscf"]
 metadata_version = "2.4"
 keywords = [
     "Electronic Structure Theory",
