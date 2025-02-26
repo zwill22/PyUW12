@@ -1,7 +1,8 @@
 import os
-import pyscf
-import pathvalidate
-import numpy as np
+
+from pyscf.gto import Mole
+from pyuw12.printer import printVal
+from pathvalidate import is_valid_filepath
 
 
 def xyz_string(atoms: list, coordinates: list) -> str:
@@ -31,7 +32,7 @@ def xyz_string(atoms: list, coordinates: list) -> str:
 
 def read_xyz(filename) -> str:
     """
-    Read an XYZ file from file `filename` and return the 
+    Read an XYZ file from file `filename` and return the
     contents in the form of a string that can be read by PySCF
 
     Args:
@@ -58,9 +59,9 @@ def read_xyz(filename) -> str:
         if len(coords) != 4:
             raise ValueError("Invalid XYZ format")
         symbol = coords[0].strip()
-        x = np.float64(coords[1])
-        y = np.float64(coords[2])
-        z = np.float64(coords[3])
+        x = float(coords[1])
+        y = float(coords[2])
+        z = float(coords[3])
 
         atoms.append(symbol)
         coord = (x, y, z)
@@ -69,7 +70,45 @@ def read_xyz(filename) -> str:
     return xyz_string(atoms, coordinates)
 
 
-def setupMol(atom: str, **kwargs) -> pyscf.gto.Mole:
+def check_molecule(mol: Mole):
+    """
+    Check the molecule setup
+
+    Args:
+        mol (Mole): PySCF molecule
+
+    Raises:
+        ValueError: Empty molecule
+    """
+    if mol.natm == 0:
+        raise ValueError("No molecule specified")
+
+
+def printMoleculeDetails(mol: Mole, verbosity: int = 1, **kwargs):
+    """
+    Print molecule details for verbosity level
+
+    Args:
+        mol (Mole): PySCF molecule
+        verbosity (int, optional): Verbosity level. Defaults to 1.
+    """
+    if verbosity < 1:
+        return
+    print("Molecule")
+    print(mol.atom)
+    print()
+    printVal("Basis set", mol.basis.upper())
+    printVal("Number of atoms", mol.natm)
+    printVal("Number of electrons", mol.nelectron)
+    printVal("Number of basis functions", mol.nao)
+    printVal("Charge", mol.charge)
+    printVal("Total spin", mol.spin)
+    printVal("Multiplicity", mol.multiplicity)
+    print()
+    printVal("Nuclear energy", "{:.6f}".format(mol.enuc))
+
+
+def setupMol(atom: str, **kwargs) -> Mole:
     """
     Setup and build a PySCF molecule. If `atom` is provided as a
     filepath, it is converted to a string that can be read by PySCF
@@ -86,7 +125,7 @@ def setupMol(atom: str, **kwargs) -> pyscf.gto.Mole:
         pyscf.gto.Mole: PySCF molecule
     """
 
-    if pathvalidate.is_valid_filepath(atom, platform="auto"):
+    if is_valid_filepath(atom, platform="auto"):
         print("File path: {}".format(atom))
         if not os.path.isfile(atom):
             raise FileNotFoundError("Cannot find file: {}".format(atom))
@@ -94,57 +133,18 @@ def setupMol(atom: str, **kwargs) -> pyscf.gto.Mole:
     else:
         molecule = atom
 
-    mol = pyscf.gto.Mole(atom=molecule, **kwargs)
+    mol = Mole(atom=molecule, **kwargs)
     mol.build()
 
-    if mol.natm == 0:
-        raise ValueError("No molecule specified")
+    check_molecule(mol)
+
+    printMoleculeDetails(mol, **kwargs)
 
     return mol
 
 
-def printVal(text: str, value, **kwargs):
-    """
-    Print a formatted value
-
-    Args:
-        text (str): Value name
-        value: Value 
-    """
-    print("{0:<32} {1}".format(text, value), **kwargs)
-
 
 if __name__ == "__main__":
-    try:
-        setupMol()
-        raise RuntimeError("No exception thrown")
-    except ValueError:
-        pass
-
     project_dir = os.path.dirname(os.path.abspath(__file__))
-    water = os.path.abspath(os.path.join(project_dir, "..", "molecules", "water.xyz"))
-    mol = setupMol(atom=water, verbose=2)
-
-    print("Molecule")
-    print(mol.atom)
-    print()
-    printVal("Basis set", mol.basis.upper())
-    printVal("Number of atoms", mol.natm)
-    printVal("Number of electrons", mol.nelectron)
-    printVal("Number of basis functions", mol.nao)
-    printVal("Charge", mol.charge)
-    printVal("Multiplicity", mol.multiplicity)
-    print()
-    printVal("Nuclear energy", "{:.6f}".format(mol.enuc))
-    print("Running SCF...")
-
-    scf = pyscf.scf.RHF(mol)
-
-    result = scf.run()
-    if not result.converged:
-        print("SCF failed to converged after {} cycles".format(result.cycles))
-        quit(0)
-
-    print("SCF converged after {} cycles".format(result.cycles))
-    print()
-    printVal("E(HF)", "{:.10f}".format(result.e_tot))
+    water = os.path.abspath(os.path.join(project_dir, "..", "molecules", "co2.xyz"))
+    mol = setupMol(water, charge=2)
