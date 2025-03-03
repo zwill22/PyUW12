@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 project(PyUW12Backend LANGUAGES CXX VERSION 0.1.0)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 message(STATUS "Setting up PyUW12 backend...")
 message(STATUS "CMake version: ${CMAKE_VERSION}")
@@ -23,6 +25,8 @@ if(NOT libuw12_POPULATED)
   set(LINALG_LIB ARMA)
   set(USE_CATCH OFF)
 endif()
+
+FIND_PACKAGE(carma CONFIG REQUIRED)
 
 message(STATUS "Setting up libuw12...")
 FetchContent_MakeAvailable(libuw12)
